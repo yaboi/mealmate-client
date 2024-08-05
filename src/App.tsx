@@ -76,7 +76,7 @@ const App: React.FC = () => {
     <>
       <Container>
         <Header />
-        <Container maxWidth="md" sx={{ mt: 6 }}>
+        <Container maxWidth="md" sx={{ mt: { xs: 5, md: 10 } }}>
           <Typography align="center" variant="h3" component="h1" gutterBottom>
             Ingredient Inspired Recipes
           </Typography>
@@ -84,49 +84,54 @@ const App: React.FC = () => {
             Simply add ingredients and MealMate's AI will generate recipes just
             for you.
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              mt: 4,
-            }}
+          <Grid
+            container
+            spacing={{ xs: 1, md: 0.5 }}
+            sx={{ pt: { xs: 4, md: 8 } }}
           >
-            <Autocomplete
-              multiple
-              fullWidth
-              freeSolo
-              options={[]}
-              disabled={loading}
-              value={ingredients}
-              onChange={(event, newValue) => {
-                setIngredients(newValue);
-              }}
-              renderTags={(value: string[], getTagProps) => {
-                return value.map((option: string, index: number) => {
-                  return <Chip label={option} {...getTagProps({ index })} />;
-                });
-              }}
-              renderInput={(params) => {
-                return (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Add Ingredient"
-                    placeholder="Type an ingredient and press Enter"
-                  />
-                );
-              }}
-            />
-            <Button
-              disabled={loading}
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={handleGenerateRecipes}
-              sx={{ ml: 1, width: "35%" }}
-            >
-              Generate Recipes
-            </Button>
-          </Box>
+            <Grid item xs={12} md={8}>
+              <Autocomplete
+                multiple
+                fullWidth
+                freeSolo
+                options={[]}
+                disabled={loading}
+                value={ingredients}
+                onChange={(event, newValue) => {
+                  setIngredients(newValue);
+                }}
+                renderTags={(value: string[], getTagProps) => {
+                  return value.map((option: string, index: number) => {
+                    return <Chip label={option} {...getTagProps({ index })} />;
+                  });
+                }}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Add Ingredient"
+                      placeholder="Type an ingredient and press Enter"
+                    />
+                  );
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Button
+                disabled={loading}
+                fullWidth
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={handleGenerateRecipes}
+                sx={{ height: "100%" }}
+              >
+                Generate Recipes
+              </Button>
+            </Grid>
+          </Grid>
+
           <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
             <FormControl>
               <FormLabel>
