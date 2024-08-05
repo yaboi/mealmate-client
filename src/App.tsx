@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import {
-  Container,
-  AppBar,
-  Toolbar,
-  Typography,
-  TextField,
-  Chip,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-} from "@mui/material";
+
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
+import Header from "./components/Header";
 
 interface Recipe {
   id: string;
@@ -44,173 +47,137 @@ const GENERATE_RECIPES = gql`
 const App: React.FC = () => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [preferences, setPreferences] = useState<string[]>([]);
-  const [newIngredient, setNewIngredient] = useState("");
+
   const [generateRecipes, { loading, data }] = useMutation(GENERATE_RECIPES);
 
-  const handleAddIngredient = () => {
-    if (newIngredient.trim() !== "" && !ingredients.includes(newIngredient)) {
-      setIngredients([...ingredients, newIngredient]);
-      setNewIngredient("");
-    }
-  };
-
-  const handleRemoveIngredient = (ingredient: string) => {
-    setIngredients(
-      ingredients.filter((i) => {
-        return i !== ingredient;
-      })
-    );
-  };
-
   const handleGenerateRecipes = async () => {
-    try {
-      /**
-       * TODO:
-       * Add validation that ensures the user has put in more than two ingredients
-       */
-      /**
-       * TODO:
-       * Adjust this auto-generated pattern to destructure loading, data,
-       * and error from useMutation hook instead of using additional react state
-       */
-      console.log({
-        variables: {
-          input: {
-            ingredients,
-            preferences,
-          },
+    /**
+     * TODO:
+     * Add validation that ensures the user has put in more than two ingredients
+     */
+    /**
+     * TODO:
+     * Adjust this auto-generated pattern to destructure loading, data,
+     * and error from useMutation hook instead of using additional react state
+     */
+    console.log({
+      variables: {
+        input: {
+          ingredients,
+          preferences,
         },
-      });
-      generateRecipes({
-        variables: {
-          input: {
-            ingredients,
-            preferences,
-          },
+      },
+    });
+    generateRecipes({
+      variables: {
+        input: {
+          ingredients,
+          preferences,
         },
-      });
-    } catch (error) {
-      console.error("Error generating recipes:", error);
-    }
+      },
+    });
   };
 
   return (
     <Container>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">Recipe Generator</Typography>
-        </Toolbar>
-      </AppBar>
-      <Container>
-        <TextField
-          label="Add Ingredient"
-          value={newIngredient}
-          onChange={(e) => setNewIngredient(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              handleAddIngredient();
-            }
+      <Header />
+      <Container maxWidth="md" sx={{ mt: 6 }}>
+        <Typography align="center" variant="h3" component="h1" gutterBottom>
+          Ingredient Inspired Recipes
+        </Typography>
+        <Typography align="center" variant="h5" component="h2">
+          Simply add ingredients and MealMate's AI will generate recipes just
+          for you.
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            mt: 4,
           }}
-          disabled={loading}
-          fullWidth
-          margin="normal"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={loading}
-          onClick={handleAddIngredient}
         >
-          Add Ingredient
-        </Button>
-        <div style={{ marginTop: "16px" }}>
-          {ingredients.map((ingredient) => (
-            <Chip
-              key={ingredient}
-              label={ingredient}
-              onDelete={() => handleRemoveIngredient(ingredient)}
-              style={{ margin: "4px" }}
-            />
-          ))}
-        </div>
-        <FormGroup>
-          <FormControlLabel
-            disabled={loading}
-            control={
-              <Checkbox
-                onChange={(e) =>
-                  setPreferences((prev) =>
-                    e.target.checked
-                      ? [...prev, "Vegan"]
-                      : prev.filter((p) => p !== "Vegan")
-                  )
-                }
-              />
-            }
-            label="Vegan"
+          <Autocomplete
+            multiple
+            fullWidth
+            freeSolo
+            options={[]}
+            value={ingredients}
+            onChange={(event, newValue) => {
+              setIngredients(newValue);
+            }}
+            renderTags={(value: string[], getTagProps) => {
+              return value.map((option: string, index: number) => {
+                return <Chip label={option} {...getTagProps({ index })} />;
+              });
+            }}
+            renderInput={(params) => {
+              return (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Add Ingredient"
+                  placeholder="Type an ingredient and press Enter"
+                />
+              );
+            }}
           />
-          <FormControlLabel
+          <Button
             disabled={loading}
-            control={
-              <Checkbox
-                onChange={(e) =>
-                  setPreferences((prev) =>
-                    e.target.checked
-                      ? [...prev, "Vegetarian"]
-                      : prev.filter((p) => p !== "Vegetarian")
-                  )
-                }
-              />
-            }
-            label="Vegetarian"
-          />
-          <FormControlLabel
-            disabled={loading}
-            control={
-              <Checkbox
-                onChange={(e) =>
-                  setPreferences((prev) =>
-                    e.target.checked
-                      ? [...prev, "Gluten Free"]
-                      : prev.filter((p) => p !== "Gluten Free")
-                  )
-                }
-              />
-            }
-            label="Gluten Free"
-          />
-          <FormControlLabel
-            disabled={loading}
-            control={
-              <Checkbox
-                onChange={(e) =>
-                  setPreferences((prev) =>
-                    e.target.checked
-                      ? [...prev, "Celiac"]
-                      : prev.filter((p) => p !== "Celiac")
-                  )
-                }
-              />
-            }
-            label="Celiac"
-          />
-        </FormGroup>
-        <Button
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          onClick={handleGenerateRecipes}
-          style={{ marginTop: "16px" }}
-        >
-          Generate Recipes
-        </Button>
-        <Grid container spacing={2} style={{ marginTop: "16px" }}>
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleGenerateRecipes}
+            sx={{ ml: 1, width: "35%" }}
+          >
+            Generate Recipes
+          </Button>
+        </Box>
+        <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+          <FormControl>
+            <FormLabel>
+              <Typography variant="caption" display="block" sx={{ pr: 1 }}>
+                Dietary Preferences:
+              </Typography>
+            </FormLabel>
+            <FormGroup row>
+              {[
+                "Vegan",
+                "Vegetarian",
+                "Gluten Free",
+                "Dairy Free",
+                "Nut Free",
+              ].map((preference) => {
+                return (
+                  <FormControlLabel
+                    disabled={loading}
+                    control={
+                      <Checkbox
+                        onChange={(e) =>
+                          setPreferences((prev) => {
+                            if (e.target.checked) {
+                              return [...prev, preference];
+                            }
+
+                            return prev.filter((selectedPreference) => {
+                              return selectedPreference !== preference;
+                            });
+                          })
+                        }
+                      />
+                    }
+                    label={preference}
+                  />
+                );
+              })}
+            </FormGroup>
+          </FormControl>
+        </Box>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           {data?.generateRecipes?.edges?.map(
             ({ node: recipe }: { node: Recipe }) => (
               <Grid item xs={12} sm={6} md={4} key={recipe.id}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h3" gutterBottom>
                       {recipe.title}
                     </Typography>
                     <Typography variant="body2" paragraph>
