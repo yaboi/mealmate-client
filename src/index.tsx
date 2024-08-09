@@ -13,6 +13,11 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+/**
+ * TODO:
+ * - Add some kind of tracking like Hotjar
+ */
+
 root.render(
   <React.StrictMode>
     <ApolloProvider>

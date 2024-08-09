@@ -1,28 +1,20 @@
 import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 
-import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Checkbox from "@mui/material/Checkbox";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import Header from "./components/Header";
+import SearchInput from "./components/SearchInput";
 
 interface Recipe {
   id: string;
@@ -32,7 +24,12 @@ interface Recipe {
   description: string;
 }
 
-// Define the GraphQL mutation
+/**
+ * TODO:
+ * - Implement defer when available from mutation to
+ *   potentially improve perceived peformance
+ * see: https://www.apollographql.com/docs/react/data/defer/
+ */
 const GENERATE_RECIPES = gql`
   mutation GenerateRecipes($input: RecipeGenerationInput!) {
     generateRecipes(input: $input) {
@@ -50,18 +47,11 @@ const GENERATE_RECIPES = gql`
 `;
 
 const App: React.FC = () => {
-  const [ingredients, setIngredients] = useState<string[]>([]);
   const [preferences, setPreferences] = useState<string[]>([]);
-  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const [generateRecipes, { loading, data }] = useMutation(GENERATE_RECIPES);
 
-  function handleGenerateRecipes() {
-    if (ingredients.length < 3) {
-      setShowDialog(true);
-      return;
-    }
-
+  function onSearchInputSubmit(ingredients: any) {
     generateRecipes({
       variables: {
         input: {
@@ -72,6 +62,15 @@ const App: React.FC = () => {
     });
   }
 
+  /**
+   * TODO:
+   * - Improve the loading state to use things like MUI Loading Button, Progress Indicators, and/or Skeletons
+   *  see:
+   *    - Progress: https://mui.com/material-ui/react-progress/
+   *    - Skeleton: https://mui.com/material-ui/react-skeleton/
+   * - Improve empty state for when no receipes were generated, provide suggestions
+   *   on ways to improve the changes of a recipe being generated.
+   */
   return (
     <>
       <Container>
@@ -84,54 +83,11 @@ const App: React.FC = () => {
             Simply add ingredients and MealMate's AI will generate recipes just
             for you.
           </Typography>
-          <Grid
-            container
-            spacing={{ xs: 1, md: 0.5 }}
-            sx={{ pt: { xs: 4, md: 8 } }}
-          >
-            <Grid item xs={12} md={8}>
-              <Autocomplete
-                multiple
-                fullWidth
-                freeSolo
-                options={[]}
-                disabled={loading}
-                value={ingredients}
-                onChange={(event, newValue) => {
-                  setIngredients(newValue);
-                }}
-                renderTags={(value: string[], getTagProps) => {
-                  return value.map((option: string, index: number) => {
-                    return <Chip label={option} {...getTagProps({ index })} />;
-                  });
-                }}
-                renderInput={(params) => {
-                  return (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Add Ingredient"
-                      placeholder="Type an ingredient and press Enter"
-                    />
-                  );
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Button
-                disabled={loading}
-                fullWidth
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={handleGenerateRecipes}
-                sx={{ height: "100%" }}
-              >
-                Generate Recipes
-              </Button>
-            </Grid>
-          </Grid>
-
+          <SearchInput
+            loading={loading}
+            minIngredients={3}
+            onSubmit={onSearchInputSubmit}
+          />
           <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
             <FormControl>
               <FormLabel>
@@ -146,9 +102,10 @@ const App: React.FC = () => {
                   "Gluten Free",
                   "Dairy Free",
                   "Nut Free",
-                ].map((preference) => {
+                ].map((preference, index) => {
                   return (
                     <FormControlLabel
+                      key={`${index}-${preference}`}
                       disabled={loading}
                       control={
                         <Checkbox
@@ -210,41 +167,6 @@ const App: React.FC = () => {
           </Grid>
         </Container>
       </Container>
-      {showDialog ? (
-        <Dialog
-          maxWidth="sm"
-          open
-          keepMounted
-          onClose={(e) => {
-            setShowDialog(false);
-          }}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            Get the most from MealMate's AI
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <Typography paragraph>
-                Please add at least 3 ingredients. If you're having trouble
-                coming up with ingredients, try adding ingredients you already
-                have in your kitchen.
-              </Typography>
-            </DialogContentText>
-            <DialogActions>
-              <Button
-                variant="outlined"
-                onClick={(e) => {
-                  setShowDialog(false);
-                }}
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </DialogContent>
-        </Dialog>
-      ) : null}
     </>
   );
 };
