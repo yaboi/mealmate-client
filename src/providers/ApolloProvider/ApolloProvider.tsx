@@ -13,14 +13,12 @@ import { onError } from "@apollo/client/link/error";
 function ApolloProvider(props: any) {
   const { children } = props;
 
-  const [client, setClient] = React.useState();
+  const [client, setClient] = React.useState<ApolloClient<any> | undefined>(
+    undefined
+  );
 
   React.useEffect(() => {
     async function init() {
-      const cache = new InMemoryCache({
-        cache: new InMemoryCache(),
-      });
-
       const errorLink = onError(({ graphQLErrors, networkError }) => {
         /**
          * TODO:
@@ -51,7 +49,7 @@ function ApolloProvider(props: any) {
 
       setClient(
         new ApolloClient({
-          cache,
+          cache: new InMemoryCache(),
           link,
           defaultOptions: {
             watchQuery: {
