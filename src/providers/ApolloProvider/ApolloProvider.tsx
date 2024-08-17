@@ -6,13 +6,23 @@ import {
   createHttpLink,
   InMemoryCache,
   from,
+  NormalizedCacheObject,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 
-function ApolloProvider(props: any) {
+interface ApolloProviderProps {
+  /**
+   * Your component tree.
+   */
+  children?: React.ReactNode;
+}
+
+function ApolloProvider(props: ApolloProviderProps) {
   const { children } = props;
 
-  const [client, setClient] = React.useState<ApolloClient<any> | undefined>(undefined);
+  const [client, setClient] = React.useState<ApolloClient<NormalizedCacheObject> | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     async function init() {

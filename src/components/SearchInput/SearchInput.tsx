@@ -16,7 +16,7 @@ import RamenDiningTwoToneIcon from '@mui/icons-material/RamenDiningTwoTone';
 
 interface Props {
   loading: boolean;
-  onSubmit: (ingredients: string[]) => any;
+  onSubmit: (ingredients: string[]) => void;
   minIngredients?: number;
 }
 

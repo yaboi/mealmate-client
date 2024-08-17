@@ -50,7 +50,7 @@ const App: React.FC = () => {
 
   const [generateRecipes, { loading, data }] = useMutation(GENERATE_RECIPES);
 
-  function onSearchInputSubmit(ingredients: any) {
+  function onSearchInputSubmit(ingredients: string[]) {
     generateRecipes({
       variables: {
         input: {
