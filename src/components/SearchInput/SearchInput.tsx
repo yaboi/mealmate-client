@@ -1,21 +1,18 @@
-import React, { useState } from "react";
-
-import Autocomplete from "@mui/material/Autocomplete";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-
-import LoadingButton from "@mui/lab/LoadingButton";
-
-import CloseIcon from "@mui/icons-material/Close";
-import RamenDiningTwoToneIcon from "@mui/icons-material/RamenDiningTwoTone";
+import React, { useState } from 'react';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import LoadingButton from '@mui/lab/LoadingButton';
+import CloseIcon from '@mui/icons-material/Close';
+import RamenDiningTwoToneIcon from '@mui/icons-material/RamenDiningTwoTone';
 
 interface Props {
   loading: boolean;
@@ -27,7 +24,7 @@ function SearchInput(props: Props) {
   const { loading, minIngredients = 0, onSubmit: onSubmitProp } = props;
 
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>('');
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
   function handleSubmit() {
@@ -43,11 +40,7 @@ function SearchInput(props: Props) {
 
   return (
     <>
-      <Grid
-        container
-        spacing={{ xs: 1, md: 0.5 }}
-        sx={{ pt: { xs: 4, md: 8 } }}
-      >
+      <Grid container spacing={{ xs: 1, md: 0.5 }} sx={{ pt: { xs: 4, md: 8 } }}>
         <Grid item xs={12} md={8}>
           <Autocomplete
             multiple
@@ -61,13 +54,7 @@ function SearchInput(props: Props) {
             }}
             renderTags={(value: string[], getTagProps) => {
               return value.map((option: string, index: number) => {
-                return (
-                  <Chip
-                    label={option}
-                    {...getTagProps({ index })}
-                    key={index}
-                  />
-                );
+                return <Chip label={option} {...getTagProps({ index })} key={index} />;
               });
             }}
             inputValue={inputValue}
@@ -77,9 +64,9 @@ function SearchInput(props: Props) {
                * intent from the user to add the ingredient to the
                * ingredients "list" (Tags/Chips)
                */
-              if (newValue.slice(-2) === ", ") {
+              if (newValue.slice(-2) === ', ') {
                 setIngredients([...ingredients, newValue.trim().slice(0, -1)]);
-                setInputValue("");
+                setInputValue('');
                 return;
               }
 
@@ -93,11 +80,9 @@ function SearchInput(props: Props) {
                   InputLabelProps={{ shrink: true }}
                   variant="outlined"
                   label="Add Ingredient"
-                  placeholder={
-                    loading ? "" : "Type an ingredient and press Enter"
-                  }
+                  placeholder={loading ? '' : 'Type an ingredient and press Enter'}
                   onKeyDown={(event) => {
-                    if (event.key === "Enter" && inputValue.length === 0) {
+                    if (event.key === 'Enter' && inputValue.length === 0) {
                       handleSubmit();
                     }
                   }}
@@ -115,12 +100,12 @@ function SearchInput(props: Props) {
             variant="contained"
             color="primary"
             size="large"
-            sx={{ height: "100%" }}
+            sx={{ height: '100%' }}
             onClick={() => {
               handleSubmit();
             }}
           >
-            <span>{`Generat${loading ? "ing" : "e"} Recipes`}</span>
+            <span>{`Generat${loading ? 'ing' : 'e'} Recipes`}</span>
           </LoadingButton>
         </Grid>
       </Grid>
@@ -129,7 +114,7 @@ function SearchInput(props: Props) {
           maxWidth="sm"
           open
           keepMounted
-          onClose={(e) => {
+          onClose={() => {
             setShowDialog(false);
           }}
           aria-labelledby="alert-dialog-title"
@@ -142,14 +127,14 @@ function SearchInput(props: Props) {
             throughout the site/app to include a "close" IconButton
            */}
           <DialogTitle id="alert-dialog-title">
-            Get the most from MealMate's AI
+            Get the most from MealMate&apos;s AI
             <IconButton
               size="small"
               aria-label="Close"
               onClick={() => {
                 setShowDialog(false);
               }}
-              sx={{ position: "absolute", right: "14px", top: "14px" }}
+              sx={{ position: 'absolute', right: '14px', top: '14px' }}
             >
               <CloseIcon />
             </IconButton>
@@ -163,8 +148,7 @@ function SearchInput(props: Props) {
             <DialogActions>
               <Button
                 variant="outlined"
-                tabIndex={1}
-                onClick={(e) => {
+                onClick={() => {
                   setShowDialog(false);
                 }}
               >

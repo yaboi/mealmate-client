@@ -1,7 +1,8 @@
-import { ThemeProvider as ThemeProviderMUI } from "@mui/material";
-import PropTypes from "prop-types";
+import * as React from 'react';
+import { ThemeProvider as ThemeProviderMUI } from '@mui/material';
+import PropTypes from 'prop-types';
 
-import theme from "./theme";
+import theme from './theme';
 
 function ThemeProvider(props: any) {
   const { children } = props;
