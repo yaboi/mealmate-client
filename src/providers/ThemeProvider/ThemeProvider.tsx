@@ -1,18 +1,18 @@
-import { ThemeProvider as ThemeProviderMUI } from "@mui/material";
-import PropTypes from "prop-types";
+import * as React from 'react';
+import { ThemeProvider as ThemeProviderMUI } from '@mui/material';
 
-import theme from "./theme";
+import theme from './theme';
 
-function ThemeProvider(props: any) {
-  const { children } = props;
-  return <ThemeProviderMUI theme={theme}>{children}</ThemeProviderMUI>;
-}
-
-ThemeProvider.propTypes = {
+interface ThemeProviderProps {
   /**
    * Your component tree.
    */
-  children: PropTypes.node,
-};
+  children?: React.ReactNode;
+}
+
+function ThemeProvider(props: ThemeProviderProps) {
+  const { children } = props;
+  return <ThemeProviderMUI theme={theme}>{children}</ThemeProviderMUI>;
+}
 
 export default ThemeProvider;

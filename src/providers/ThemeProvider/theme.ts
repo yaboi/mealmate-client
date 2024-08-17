@@ -1,9 +1,9 @@
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 /**
  * TODO:
@@ -13,10 +13,10 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2A9D8F",
+      main: '#2A9D8F',
     },
     secondary: {
-      main: "#264653",
+      main: '#264653',
     },
   },
 });

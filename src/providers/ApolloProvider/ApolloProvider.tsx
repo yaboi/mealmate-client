@@ -1,20 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
-
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   ApolloClient,
   ApolloProvider as ApolloClientProvider,
   createHttpLink,
   InMemoryCache,
   from,
-} from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
+  NormalizedCacheObject,
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
 
-function ApolloProvider(props: any) {
+interface ApolloProviderProps {
+  /**
+   * Your component tree.
+   */
+  children?: React.ReactNode;
+}
+
+function ApolloProvider(props: ApolloProviderProps) {
   const { children } = props;
 
-  const [client, setClient] = React.useState<ApolloClient<any> | undefined>(
-    undefined
+  const [client, setClient] = React.useState<ApolloClient<NormalizedCacheObject> | undefined>(
+    undefined,
   );
 
   React.useEffect(() => {
@@ -53,13 +60,13 @@ function ApolloProvider(props: any) {
           link,
           defaultOptions: {
             watchQuery: {
-              errorPolicy: "all",
+              errorPolicy: 'all',
             },
           },
           // Enable Apollo DevTools for Chrome in non Prod envs
           // ref: https://chrome.google.com/webstore/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm
-          connectToDevTools: process.env.NODE_ENV !== "production",
-        })
+          connectToDevTools: process.env.NODE_ENV !== 'production',
+        }),
       );
     }
 
@@ -76,9 +83,7 @@ function ApolloProvider(props: any) {
     return null;
   }
 
-  return (
-    <ApolloClientProvider client={client}>{children}</ApolloClientProvider>
-  );
+  return <ApolloClientProvider client={client}>{children}</ApolloClientProvider>;
 }
 
 ApolloProvider.propTypes = {

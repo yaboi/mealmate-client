@@ -1,17 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import CssBaseline from "@mui/material/CssBaseline";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import App from "./App";
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import ApolloProvider from './providers/ApolloProvider';
+import ThemeProvider from './providers/ThemeProvider';
 
-import reportWebVitals from "./reportWebVitals";
-
-import ApolloProvider from "./providers/ApolloProvider";
-import ThemeProvider from "./providers/ThemeProvider";
-
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 /**
  * TODO:
@@ -26,7 +22,7 @@ root.render(
         <App />
       </ThemeProvider>
     </ApolloProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
